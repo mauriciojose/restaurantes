@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixas</title>
+    <base href="/">
+    <link rel="stylesheet" type="text/css" href="/templates/css/liststyle.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
+
+    <link rel="stylesheet" type="text/css" href="/templates/css/caixa.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        label {
+            color: black !important;
+        }
+        
+        input {
+            background-color: white !important;
+            color: black !important;
+        }
+        
+        body div.container1 {
+            height: 100% !important;
+        }
+        
+        table {
+            min-width: 100% !important;
+        }
+        
+        .form {
+            display: inherit !important;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../componentes/menu.ejs'); -%>
+
+        <div class="container1">
+            <div class="container-form">
+                <form action="" method="post">
+                    <div class="form">
+                        <label for="">De
+                        <input type="date" name="" id=""></label>
+                        <label> até
+                        <input type="date" name="" id=""></label>
+                        <label>&nbsp;
+
+                        <button class="btn btn-success">Buscar</button></label>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+        <div class="container1">
+            <div class="container-form">
+
+
+                <br>
+                <div id="#responsive" class="itens">
+                    <table id="listItens">
+                        <thead>
+
+                            <th>Cliente</th>
+                            <th class="text-center">Entrada</th>
+                            <th class="text-center">Status</th>
+                            <th>Valor</th>
+
+                        </thead>
+                        <tbody>
+                            <% caixas.forEach(function(caixa){ %>
+
+                                <tr class='clickable-row' data-href='<%="/financeiro/caixas/"+caixa._id%>' style="cursor: pointer;" id="<%=caixa._id%>">
+
+                                    <td>
+                                        <% if(caixa.isDelivery){%>
+                                            <%=caixa.client.name%>
+                                                <%}else{%>
+                                                    <%=caixa.mesa.name%>
+                                                        <%}%>
+                                    </td>
+
+
+                                    <td class="text-center">
+                                        <%=caixa.dateOpen.getDate()+'/'+(caixa.dateOpen.getMonth()+1)+'/'+caixa.dateOpen.getFullYear() +' '+(caixa.dateOpen.getHours())+':'+(caixa.dateOpen.getMinutes())%>
+                                    </td>
+                                    <td class="text-center">
+                                        <%=(caixa.status==0) ? 'Aberto' : 'Fechado'%>
+                                    </td>
+                                    <td>R$:
+                                        <%=caixa.total%>
+
+                                    </td>
+
+                                </tr>
+                                <% }); %>
+                                    <tr>
+                                        <td colspan="2">Total de Itens:
+                                            <%=total%>
+                                        </td>
+                                        <td colspan="2"> Valor Total:R$
+                                            <%=' '+total%>
+                                        </td>
+                                    </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function($) {
+                $(".clickable-row").click(function() {
+                    window.location = $(this).data("href");
+                });
+            });
+        </script>
+        <%- include('../componentes/rodape.ejs'); -%>
+</body>
+
+</html>

@@ -1,0 +1,263 @@
+<!Doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sistema Pizza</title>
+    <link rel="stylesheet" href="/templates/css/estilo.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <style>
+        .topnav .search-container {
+            float: right;
+        }
+        
+        .topnav input[type=text] {
+            padding: 6px;
+            margin-top: 8px;
+            font-size: 17px;
+            border: none;
+            width: 76%;
+        }
+        
+        .topnav .search-container button {
+            float: right;
+            padding: 6px 10px;
+            margin-top: 8px;
+            margin-right: 16px;
+            background: #ddd;
+            font-size: 17px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .topnav .search-container button:hover {
+            background: #ccc;
+        }
+        
+        @media screen and (max-width: 30rem) {
+            .topnav .search-container button {
+                position: relative;
+                margin-top: -35px !important;
+                margin-right: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <%- include('componentes/menu.ejs'); -%>
+
+
+
+        <div class="container">
+
+            <!-- Inventory - START -->
+            <center>
+                <div class="topnav">
+                    <h2 class="subtitulos">Mesas
+
+                        <div class="search-container">
+                            <form action="/action_page.php">
+                                <input type="text" placeholder="Search.." name="search">
+                                <button type="submit">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="17.968" height="29.001" viewBox="0 0 32.968 29.001">
+                                    <g id="Grupo_18" data-name="Grupo 18" transform="translate(-1247 -318)">
+                                      <g id="Elipse_2" data-name="Elipse 2" transform="translate(1247 318)" fill="none" stroke="#000459" stroke-width="4">
+                                        <circle cx="12.5" cy="12.5" r="12.5" stroke="none"/>
+                                        <circle cx="12.5" cy="12.5" r="10.5" fill="none"/>
+                                      </g>
+                                      <path id="Caminho_5" data-name="Caminho 5" d="M1268.96,337.5l9.744,7.951" fill="none" stroke="#000459" stroke-width="4"/>
+                                    </g>
+                                  </svg>
+                                </button>
+                            </form>
+                        </div>
+
+                    </h2>
+                </div>
+        </div>
+        </center>
+        <br>
+        <div class="container-fluid" id="inventory">
+            <div class="card-container">
+                <% mesas.forEach(function(mesa){
+                    if(mesa.caixa){
+                    %>
+                    <div class="col-md-3">
+
+                        <div class="card">
+                            <center>
+                                <img class="img-fluid" src="/img/mesa.png" alt="Card image cap">
+                                <div class="card-body">
+                                    <% if(mesa.tipo==0){
+                                        %>
+                                        <button onclick="showClickHandler('<%=mesa._id%>')" class="btn livre-btn"><%=mesa.name%></button>
+
+                                        <%}else{%>
+                                            <button onclick="caixa('<%=mesa.caixa._id%>')" class="btn view-btn"><%=mesa.name%></button>
+                                            <%}%>
+                                </div>
+                            </center>
+                        </div>
+
+                    </div>
+                    <% }}); %>
+
+            </div>
+
+            <hr>
+            <a href="" id="prev" role="button" data-bs-slide="prev">
+
+                <span class="previous"><img src="/img/prev.png" width="40" alt=""></span>
+            </a>
+            <a href="" class="next" id="next" role="button" data-bs-slide="next">
+                <span class="previous"><img src="/img/next.png" width="40" alt=""></span>
+            </a>
+        </div>
+
+        <br><br>
+        <!-- combo
+            <center>
+                <div class="row">
+                    <h2 class="subtitulos">Produtos
+                        <input type="search" class="rigth" name="" placeholder="Pesquisar" id="">
+
+                        <a href=""> <span id="lupa2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="17.968" height="29.001" viewBox="0 0 32.968 29.001">
+                        <g id="Grupo_18" data-name="Grupo 18" transform="translate(-1247 -318)">
+                          <g id="Elipse_2" data-name="Elipse 2" transform="translate(1247 318)" fill="none" stroke="#000459" stroke-width="4">
+                            <circle cx="12.5" cy="12.5" r="12.5" stroke="none"/>
+                            <circle cx="12.5" cy="12.5" r="10.5" fill="none"/>
+                          </g>
+                          <path id="Caminho_5" data-name="Caminho 5" d="M1268.96,337.5l9.744,7.951" fill="none" stroke="#000459" stroke-width="4"/>
+                        </g>
+                      </svg>
+                    </span> </a>
+                    </h2>
+                </div>
+            </center>
+            <br>
+
+            <div class="container-fluid" id="inventory">
+                <div class="card-container2">
+                    <% for(let i=1;i<=10;i++){%>
+                        <div class="col-md-3">
+
+                            <div class="card">
+                                <center>
+                                    <img class="img-fluid" src="/img/combo1.png" width="150" alt="Card image cap">
+                                    <div class="card-body">
+
+                                        <button class="btn view-btn">Produto <%=i%></button>
+
+                                    </div>
+                                </center>
+                            </div>
+
+                        </div>
+
+                        <% }%>
+
+
+
+                </div>
+                <a href="" id="prev2" role="button" data-bs-slide="prev">
+
+                    <span class="previous"><img src="/img/prev.png" width="40" alt=""></span>
+                </a>
+                <a href="" class="next" id="next2" role="button" data-bs-slide="next">
+                    <span class="previous"><img src="/img/next.png" width="40" alt=""></span>
+                </a>
+                <hr>
+            </div> -->
+
+        <%- include('componentes/rodape.ejs'); -%>
+
+</body>
+
+</html>
+<div class="modal" tabindex="-1" id="myModal" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Usar Mesa</h5>
+                <button type="button" class="mdl-button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <input type="hidden" id="idMesa">
+                    <label for="name">Cliente</label>
+                    <input style="width: 100% !important;" id="name" class="" required name="name" type='text'>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="usarMesa();" class="mdl-button">Usar</button>
+                <button type="button" class="mdl-button" onclick="closeClickHandler()" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+<script>
+    function showClickHandler(idMesa) {
+        document.querySelector('#idMesa').value = idMesa;
+        $('#myModal').modal('show');
+
+    };
+
+    function usarMesa() {
+        let idMesa = document.querySelector('#idMesa');
+        let name = document.querySelector('#name');
+
+        let data = {
+            cliente: name.value,
+            mesa: idMesa.value
+        };
+        // console.log(data, id);
+        $.ajax({
+            type: 'PUT',
+            url: '/use/mesa/' + idMesa.value,
+            contentType: 'application/json',
+            data: JSON.stringify(data), // access in body
+            success: function() {
+                window.location.reload(true);
+
+            }
+        })
+    }
+
+    function closeClickHandler() {
+        $('#myModal').modal('hide');
+    };
+    $('#prev').click(function(event) {
+        event.preventDefault();
+        document.querySelector('.card-container').scrollLeft -= 50;
+
+    });
+    $('#next').click(function(event) {
+        event.preventDefault();
+        document.querySelector('.card-container').scrollLeft += 50;
+
+    });
+    $('#prev2').click(function(event) {
+        event.preventDefault();
+        document.querySelector('.card-container2').scrollLeft -= 50;
+
+    });
+    $('#next2').click(function(event) {
+        event.preventDefault();
+        document.querySelector('.card-container2').scrollLeft += 50;
+
+    });
+
+    function caixa(idCaixa) {
+        window.location.href = "/financeiro/caixa/" + idCaixa;
+    }
+</script>

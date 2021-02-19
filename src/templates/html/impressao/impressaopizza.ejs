@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impressao</title>
+    <link rel="stylesheet" href="/templates/geral/css/impressao.css">
+
+    <style>
+        th {
+            font-size: 12pt;
+            font-weight: bold;
+        }
+        
+        td {
+            font-size: 13pt;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="impressao">
+        <div class="left">
+            <b>Cliente: <%=name%></b>
+        </div>
+        <% pizzas.forEach(function(produto){ %>
+            <div style="margin-top: 18px; padding: 10px;width: 100%;border: 1px solid black; border-radius: 11px;">
+                <div>
+                    Tamanho: <b style="width: 58px;font-size:17px"><%=produto.tamanho%></b>
+                </div>
+                <div class="diver"></div>
+                <table style="width: 100%;">
+
+                    <tbody>
+
+                            <% produto.pizzas.forEach(function(pizza){ %>
+                                <tr>
+
+                                    <td>
+                                        <b><b style="font-size: 17px;">*</b> SABOR: </b>
+                                        <%= pizza.produto.name %>
+                                    </td>
+            
+                                </tr>
+            
+                                <tr>
+                                    <td style="word-break: break-all;text-transform: uppercase; font-weight: normal;">
+                                        <b>OBS:</b>
+                                        <%= pizza.observacao%>
+            
+                                    </td>
+                                </tr>
+                            <%});%>
+
+                        
+                    </tbody>
+                </table>
+            </div>
+        <% }); %>
+        <footer>
+            <%
+                var data = new Date(),
+                dia  = data.getDate().toString(),
+                diaF = (dia.length == 1) ? '0'+dia : dia,
+                mes  = (data.getMonth()+1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+                mesF = (mes.length == 1) ? '0'+mes : mes,
+                anoF = data.getFullYear();
+                minute = ("0000000000"+data.getMinutes()).slice(-2);
+                var newDate =  diaF+"/"+mesF+"/"+anoF +" "+data.getHours()+":"+minute;
+            %>
+                Emissão:
+                <%= newDate %>
+        </footer>
+        <div style="text-align: center;">
+            -------------------------------------------------------------------
+        </div>
+    </div>
+    <!--<div class="float-rigth" onclick="window.print();">
+        <img src="/templates/geral/img/print.png" alt="">
+    </div> -->
+</body>
+
+</html>

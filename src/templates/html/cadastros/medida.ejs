@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <base href="/">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/templates/css/produto.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
+</head>
+
+<body>
+    <%- include('../componentes/menu.ejs'); -%>
+        <div class="notify"><span id="notifyType" class=""></span></div>
+        <form class="container" action="/cadastros/medida" method="POST">
+            <div class="container-form">
+                <div class="informations">
+                    <header>Nova Medida</header>
+                    <main>
+                        <div class="form-outline">
+                            <label style="color: white;" for="">Pesquisa</label>
+                            <select id="input">
+                                <% dados.forEach(function(dado){%>
+                                    <option value="<%=dado._id %>"><%=dado.name%></option>
+                                    <% });%>
+                            </select>
+                            <button class="register" id="busca">Busca</button>
+                            <br> <br>
+                            <hr>
+                            <br>
+                        </div>
+                        <input type="hidden" id="id" name="id">
+                        <div class="row">
+                            <fieldset class='float-label-field quarentaecinco'>
+                                <label for="codigo">Código</label>
+                                <input id="codigo" value="<%=codigo%>" class='campo-texto' required name="codigo" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field vinte'>
+                                <label for="sigla">Sigla</label>
+                                <input id="sigla" size="3" maxlength="3" class='campo-texto' required name="sigla" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field trinta'>
+                                <label style="margin-bottom: 3%;" for="ativo">Ativo</label>
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="ativo" class="onoffswitch-checkbox" id="myonoffswitch" value="true" tabindex="0" checked>
+                                    <label class="onoffswitch-label" for="myonoffswitch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset class='float-label-field setentaecinco'>
+                                <label for="name">Nome</label>
+                                <input id="name" class='campo-texto' required name="name" type='text'>
+                            </fieldset>
+                        </div>
+                    </main>
+                    <footer>
+                        <button type="submit" onclick="getModel();" class="register">Registrar</button>
+                    </footer>
+                </div>
+            </div>
+        </form>
+        <script>
+            let fields = document.querySelectorAll('form fieldset.float-label-field');
+            for (let index = 0; index < fields.length; index++) {
+                const field = fields[index];
+                const input = field.querySelector('input');
+                input.onfocus = () => {
+                    field.classList.add('float');
+                    field.classList.add('focus');
+                };
+                input.onblur = () => {
+                    field.classList.remove('focus');
+                    if (!input.value) {
+                        field.classList.remove('float');
+                    }
+                };
+            }
+
+            let checkeds = document.querySelectorAll('input[type=checkbox]');
+
+            for (let index = 0; index < checkeds.length; index++) {
+                const element = checkeds[index];
+                element.onclick = function() {
+                    this.value = this.checked;
+                }
+            }
+
+            function getModel() {
+                let model = {};
+                let inputs = document.querySelectorAll('input.campo-texto');
+                addProprietie(inputs, model);
+                let selects = document.querySelectorAll('select');
+                addProprietie(selects, model);
+                console.log(model);
+            }
+
+            function addProprietie(objetos, model) {
+                for (let index = 0; index < objetos.length; index++) {
+                    const objeto = objetos[index];
+                    validate(objeto);
+                    model[objeto.getAttribute('name')] = objeto.value;
+                }
+            }
+
+            function validate(input) {
+                if (input.hasAttribute('required') && input.value == "") {
+                    input.style.borderColor = 'red';
+                    console.log(`label[for=${input.getAttribute('name')}]`);
+                    let label = document.querySelector(`label[for=${input.getAttribute('name')}]`);
+                    label.style.color = 'red';
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+
+            function sucess() {
+                $(".notify").toggleClass("active");
+                $(".notify").toggleClass("success");
+                $("#notifyType").html("Adicionado com Sucesso!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("success");
+                    $(".notify").hide();
+                }, 5000);
+            }
+
+            function failure() {
+                $(".notify").addClass("active");
+                $(".notify").addClass("failure");
+                $("#notifyType").html("Error ao adicionar!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("failure");
+                    $(".notify").hide();
+                }, 5000);
+            }
+
+            $('#busca').click(function(event) {
+                event.preventDefault();
+                var busca = $('#input').val();
+                $.ajax({
+                    method: 'PUT',
+                    url: '/list/medida',
+                    data: {
+                        id: busca
+                    },
+                    success: function(retorno) {
+                        $('#codigo').val(retorno['codigo']);
+                        $('#sigla').val(retorno['sigla']);
+                        $('#name').val(retorno['name']);
+                        $('#id').val(retorno['_id']);
+                    }
+
+                });
+            });
+        </script>
+        <% if(situacao.situacao==1){%>
+            <script>
+                sucess();
+            </script>
+            <%}%>
+
+
+                <%- include('../componentes/rodape.ejs'); -%>
+</body>
+
+</html>

@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <base href="/">
+    <link rel="stylesheet" type="text/css" href="/templates/css/produto.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+
+    <script src="https://cdn.ckeditor.com/4.15.1/standard/ckeditor.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.1/jquery.maskMoney.min.js"></script>
+</head>
+
+<body>
+    <%- include('../componentes/menu.ejs'); -%>
+        <div class="notify"><span id="notifyType" class=""></span></div>
+        <form class="container long" action="/cadastros/produto" method="POST" enctype="multipart/form-data">
+            <div class="container-form">
+                <div class="informations">
+                    <header>Novo Produto</header>
+                    <main>
+                        <div class="form-outline">
+                            <label style="color: white;" for="">Pesquisa</label>
+                            <select id="input">
+                                <% dados.forEach(function(dado){%>
+                                    <option value="<%=dado._id %>"><b>Produto:</b><%=dado.name%> |<b> Preço:</b><%=dado.precoVenda%></option>
+                                    <% });%>
+                            </select>
+                            <button class="register" id="busca">Busca</button>
+                            <br> <br>
+                            <hr>
+                            <br>
+                        </div>
+                        <input type="hidden" id="id" name="id">
+                        <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="name">Nome</label>
+                                <input id="name" class='campo-texto' required name="name" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field trinta'>
+                                <label style="margin-bottom: 3%;" for="ativo">Ativo</label>
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="ativo" class="onoffswitch-checkbox" value="true" id="myonoffswitch" tabindex="0" checked>
+                                    <label class="onoffswitch-label" for="myonoffswitch">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                                </div>
+                            </fieldset>
+                            <fieldset class='float-label-field trinta'>
+                                <label style="margin-bottom: 3%;" for="estoque">Controla Estoque?</label>
+                                <div class="onoffswitch">
+                                    <input type="checkbox" name="estoque" class="estoque onoffswitch-checkbox" value="true" id="myonoffswitch1" tabindex="0" checked>
+                                    <label class="onoffswitch-label" for="myonoffswitch1">
+                                    <span class="onoffswitch-inner"></span>
+                                    <span class="onoffswitch-switch"></span>
+                                </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <!-- <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="descricao">Descrição</label>
+                                <textarea rows="3" id="descricao" class='texto' required name="descricao" type='text'></textarea>
+                            </fieldset>
+                        </div> -->
+                        <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="codigo">Código</label>
+                                <input id="codigo" value="<%=codigo%>" class='texto' required name="codigo" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field'>
+                                <label for="refInterna">Referência Interna</label>
+                                <input id="refInterna" value="<%=codigo%>" class='texto' required name="refInterna" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field'>
+                                <label for="marca">Marca</label>
+                                <select name="marca" id="marca">
+                                <option value="">Selecione a Marca</option>
+                            </select>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="medida">Unidade de Medida</label>
+                                <select name="medida" required id="medida">
+                                <option value="">Selecione a Medida</option>
+                                <% medidas.forEach(function(medida){ %>
+                                    <option value="<%=medida._id%>"><%=medida.name%></option>
+                                  <% }); %>
+                            </select>
+                            </fieldset>
+                            <fieldset class='float-label-field'>
+                                <label for="categorias">Categoria</label>
+                                <select multiple class="select2" name="categorias" id="categorias">
+                                <!-- <option value="">Selecione a Categoria</option> -->
+                                <% categorias.forEach(function(categoria){ %>
+                                    <option value="<%=categoria._id%>"><%=categoria.name%></option>
+                                  <% }); %>
+                            </select>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <!-- <fieldset class='float-label-field'>
+                                <label for="quantidade">Quantidade</label>
+                                <input id="quantidade" class='texto' value="0" required name="quantidade" type='text'>
+                            </fieldset> -->
+                            <fieldset class='float-label-field'>
+                                <label for="fatorMinimo">Fator Mínimo</label>
+                                <input id="fatorMinimo" class='texto' value="0" required name="fatorMinimo" type='text'>
+                            </fieldset>
+                            <!-- <fieldset class='float-label-field'>
+                                <label for="quantidade">Quantidade</label>
+                                <input id="quantidade" class='texto' value="0" required name="quantidade" type='text'>
+                            </fieldset> -->
+                            <fieldset class='float-label-field'>
+                                <label for="nomeImagem">Nome da imagem</label>
+                                <input id="nomeImagem" class='texto' value="" required name="nomeImagem" type='text'>
+                            </fieldset>
+                        </div>
+                        <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="precoFornecedor">Preço Fornecedor</label>
+                                <input id="precoFornecedor" class='texto money' value="0" name="precoFornecedor" type='text'>
+                            </fieldset>
+                            <fieldset class='float-label-field'>
+                                <label for="precoVenda">Preço de Venda</label>
+                                <input id="precoVenda" class='texto money' value="0" name="precoVenda" type='text'>
+                            </fieldset>
+                        </div>
+                        <!-- <div class="row">
+                            <fieldset class='float-label-field'>
+                                <label for="images">Imagens</label>
+                                <input id="images" multiple class='files' name="images" type='file'>
+                            </fieldset>
+                        </div> -->
+                    </main>
+                    <footer>
+                        <button type="submit" onclick="getModel();" class="register">Registrar</button>
+                    </footer>
+                </div>
+            </div>
+        </form>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    placeholder: "Selecione as Categorias",
+                });
+                $(".money").maskMoney({
+                    prefix: '',
+                    // allowNegative: true,
+                    thousands: '.',
+                    decimal: ',',
+                    allowZero: true,
+                    defaultZero: false
+                });
+                $('.money').each(function() { // function to apply mask on load!
+                    $(this).maskMoney('mask', $(this).val());
+                });
+            });
+            CKEDITOR.replace('descricao');
+
+            let checkeds = document.querySelectorAll('input[type=checkbox]');
+
+            for (let index = 0; index < checkeds.length; index++) {
+                const element = checkeds[index];
+                element.onclick = function() {
+                    this.value = this.checked;
+                }
+            }
+
+            // let fields = document.querySelectorAll('form fieldset.float-label-field');
+            // for (let index = 0; index < fields.length; index++) {
+            //     const field = fields[index];
+            //     const input = field.querySelector('input');
+            //     input.onfocus = ()=>{
+            //         field.classList.add('float');
+            //         field.classList.add('focus');
+            //     };
+            //     input.onblur = ()=>{
+            //         field.classList.remove('focus');
+            //         if (!input.value) {
+            //             field.classList.remove('float');
+            //         }
+            //     };
+            // }
+
+            function getModel() {
+                let model = {};
+                let inputs = document.querySelectorAll('input.campo-texto');
+                addProprietie(inputs, model);
+                let selects = document.querySelectorAll('select');
+                addProprietie(selects, model);
+                console.log(model);
+            }
+
+            function addProprietie(objetos, model) {
+                for (let index = 0; index < objetos.length; index++) {
+                    const objeto = objetos[index];
+                    validate(objeto);
+                    model[objeto.getAttribute('name')] = objeto.value;
+                }
+            }
+
+            function validate(input) {
+                if (input.hasAttribute('required') && input.value == "") {
+                    input.style.borderColor = 'red';
+                    console.log(`label[for=${input.getAttribute('name')}]`);
+                    let label = document.querySelector(`label[for=${input.getAttribute('name')}]`);
+                    label.style.color = 'red';
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+            function sucess() {
+                $(".notify").toggleClass("active");
+                $(".notify").toggleClass("success");
+                $("#notifyType").html("Cadastrado com Sucesso!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("success");
+                    $(".notify").hide();
+                }, 5000);
+            }
+
+            function failure() {
+                $(".notify").addClass("active");
+                $(".notify").addClass("failure");
+                $("#notifyType").html("Error ao adicionar!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("failure");
+                    $(".notify").hide();
+                }, 5000);
+            }
+            $('#busca').click(function(event) {
+                event.preventDefault();
+                var busca = $('#input').val();
+                $.ajax({
+                    method: 'GET',
+                    url: '/produto/' + busca,
+                    // data: {
+                    //     id: busca
+                    // },
+                    success: function(retorno) {
+                        $('#codigo').val(retorno['codigo']);
+
+                        // let est = $('.estoque');
+                        // est.checked = retorno['estoque']; 
+                        if ( $('.estoque').val() != retorno['estoque'] ) {
+                            $('.estoque').click();
+                        }
+                        
+                        $('.estoque').val(retorno['estoque']);
+                        $('#name').val(retorno['name']);
+                        $('#id').val(retorno['_id']);
+                        $('#fatorMinino').val(retorno['fatorMinino']);
+                        // $('#categorias').val(retorno['categorias'][0]);
+                        $('#descricao').val(retorno['descricao']);
+                        $('#refInterna').val(retorno['refInterna']);
+                        $('#nomeImagem').val(retorno['nomeImagem']);
+                        $('#precoFornecedor').val(retorno['precoFornecedor']['$numberDecimal']);
+                        $('#precoVenda').val(retorno['precoVenda']['$numberDecimal']);
+                        $('#medida').val(retorno['medida']);
+                        $('#quantidade').val(retorno['quantidade']);
+                        $('#myonoffswitch').val(retorno['ativo']);
+                        console.log(retorno['categorias'][0]);
+
+                    }
+
+                });
+            });
+        </script>
+        <% if(situacao.situacao==1){%>
+            <script>
+                sucess();
+            </script>
+            <%}%>
+                <%- include('../componentes/rodape.ejs'); -%>
+</body>
+
+</html>

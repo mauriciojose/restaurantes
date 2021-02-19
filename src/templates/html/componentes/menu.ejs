@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="/templates/css/teste.css">
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+<!-- <script defer src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<style>
+    div.float-button-voltar {
+        width: 30px;
+        height: 50px;
+        background-color: transparent;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50px;
+        position: fixed;
+        right: 5%;
+        bottom: 89%;
+        /* box-shadow: 1px 2px 8px black; */
+        cursor: pointer;
+    }
+    
+    div.float-button-voltar span {
+        font-size: 30pt;
+        margin-top: 10%;
+        margin-left: 3%;
+    }
+    
+    @media (max-width: 48rem) {
+        .cell {
+            display: none;
+        }
+    }
+</style>
+
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+    <a href="/" class="dropdown-btn inicio">Inicio 
+    </a>
+    <button class="dropdown-btn cell">Cadastros 
+      </button>
+    <div class="dropdown-container ">
+        <a href="/cadastros/categoria">Categoria</a>
+        <a href="/cadastros/cliente">Cliente</a>
+        <a href="/auth/register">Funcionario</a>
+        <a href="/cadastros/medida">Medidas</a>
+        <a href="/cadastros/mesa">Mesa</a>
+        <a href="/cadastros/produto">Produto</a>
+        <!-- <a href="/cadastros/pizza">Pizza</a> -->
+    </div>
+    <button class="dropdown-btn">Mesas 
+    </button>
+    <div class="dropdown-container">
+        <a href="/list/mesas">Lista de Mesas</a>
+    </div>
+    <button class="dropdown-btn cell">Estoque 
+    </button>
+    <div class="dropdown-container">
+        <a href="/estoque/addestoque">Adicionar</a>
+    </div>
+    <button class="dropdown-btn">Delivery 
+</button>
+    <div class="dropdown-container">
+
+        <a href="/delivery/delivery">Lista de Pedidos</a>
+    </div>
+    <button class="dropdown-btn cell">Relatório 
+    </button>
+    <div class="dropdown-container">
+
+
+        <a href="/relatorio/caixa">Caixa</a>
+        <a href="#">Geral</a>
+        <a href="#">Estoque</a>
+    </div>
+    <button class="dropdown-btn cell">Relação de Compra
+    </button>
+    <div class="dropdown-container">
+
+        <a href="/compra/cadastro">Compras Efetuadas</a>
+
+
+    </div>
+
+
+
+</div>
+<div class="container">
+    <a onclick="goAtualiza();">
+        <div class="float-button-voltar" style="right:18%;">
+            <span>&#128260;</span>
+        </div>
+    </a>
+
+    <a onclick="goBack();">
+        <div class="float-button-voltar">
+            <span>&#9194</span>
+        </div>
+    </a>
+</div>
+<div id="main">
+    <button class="openbtn" onclick="openNav()">☰</button>

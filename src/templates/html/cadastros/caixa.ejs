@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caixa</title>
+    <link rel="stylesheet" type="text/css" href="/templates/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/caixa.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
+    <style>
+        .mdl-dialog {
+            width: 100% !important;
+        }
+        
+        @media (max-width: 48rem) {
+            div .row {
+                display: block !important;
+            }
+            .container {
+                display: block;
+            }
+            .cell {
+                display: none;
+            }
+        }
+        
+        label {
+            color: #000459;
+        }
+        
+        #valor {
+            color: #fff !important;
+        }
+        
+        .container {
+            display: flex;
+        }
+        
+        .customers {
+            font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        
+        .customers tbody td,
+        .customers thead th {
+            border: 1px solid #ddd;
+            padding: 8px;
+            word-break: normal;
+        }
+        
+        .customers th {
+            width: 10%;
+        }
+        
+        .customers tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .customers tr:hover {
+            background-color: #ddd;
+        }
+        
+        .customers th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: center;
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        a {
+            cursor: pointer;
+        }
+        
+        .campos {
+            color: #fff !important;
+            background: #439a47 !important;
+            font-size: 19px !important;
+        }
+        
+        .mostrar {
+            display: inline-block !important;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+        var formatter = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2,
+        });
+    </script>
+
+</head>
+
+<body>
+    <%- include('../componentes/menu.ejs'); -%>
+        <input type="hidden" name="idMesa" id="idMesa" value="<%=idMesa%>">
+        <input type="hidden" name="idCaixa" id="idCaixa" value="<%=idCaixa%>">
+
+        <div class="notify"><span id="notifyType" class=""></span></div>
+
+        <div class="caixa">
+            <div class="logo">
+                <!-- <img id="cliente" src="images/img/mesa.png" alt=""> -->
+            </div>
+            <div style="overflow-y: scroll;" class="tabela">
+                <table id="listItens" class="customers">
+                    <thead>
+                        <input type="hidden" name="" id="status" value="<%=status%>">
+                        <th>Código</th>
+                        <th style="text-align: left !important;">Nome</th>
+                        <th>Quantidade</th>
+                        <th>Valor Unitário</th>
+                        <th>Valor Total</th>
+                        <th>Ação</th>
+
+                    </thead>
+                    <tbody>
+                        <%var total = 0; var i=0;%>
+                            <% produtos.forEach(function(produto){ 
+                             i++;
+                                %>
+                                <%if(typeof produto.produto != 'undefined'){%>
+                                    <%total+=(parseFloat(produto.quantidade)*parseFloat(produto.valorUnitario));
+                                        
+                                    %>
+                                        <tr>
+                                            <td>
+                                                <%=produto.produto.codigo%>
+                                            </td>
+                                            <td style="text-align: left !important;">
+                                                <%=produto.produto.name%>
+                                            </td>
+                                            <td>
+                                                <a id="diminuir<%=i%>">&#10134</a>
+                                                <input type="hidden" id="produto<%=i%>" value="<%=produto._id%>">
+                                                <input type="text" disabled id="qtde<%=i%>" style="width: 4em; font-size:14px;text-align: center; color: #000458;background-color: white;" value="<%=produto.quantidade%>">
+                                                <a id="aumentar<%=i%>">&#10133</a>
+                                            </td>
+                                            <td class="money">
+                                                <%=produto.valorUnitario%>
+                                            </td>
+                                            <td class="money">
+                                                <%=(produto.quantidade*produto.valorUnitario)%>
+                                            </td>
+                                            <td><a class="cell" onclick="remover('<%=produto._id%>');">&#9940</a></td>
+                                        </tr>
+                                        <%}else{%>
+                                            <%total+= !isNaN(parseFloat(produto.valorUnitario)) ? parseFloat(produto.valorUnitario) : 0 %>
+                                                <tr>
+                                                    <td><button onclick="showClickHandler('<%=produto._id%>');">Sabores</button></td>
+                                                    <td style="text-align: left !important;">Pizza com
+                                                        <%=produto.quantidade%> fatias</td>
+                                                    <td>1</td>
+                                                    <td class="money">
+                                                        <%=produto.valorUnitario%>
+                                                    </td>
+                                                    <td class="money">
+                                                        <%=console.log(produto)%>
+                                                            <%=!isNaN(parseFloat(produto.valorUnitario)) ? parseFloat(produto.valorUnitario) : 0 %>
+                                                    </td>
+                                                    <td><a class="cell" onclick="remover('<%=produto._id%>');">&#9940</a></td>
+                                                </tr>
+                                                <%}%>
+                                                    <% }); %>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="container">
+
+            <div class="row">
+                <div style="display: flex;margin-left: 4%;margin-top: 2%;">
+                    <label style="margin-right: 5px;">SubTotal: R$:<input type="text" value="<%=parseFloat(total).toFixed(2)%>" readonly disabled name="" class="input" id="subtotal"></label>
+
+                </div>
+                <div style="display: flex;margin-left: 4%;margin-top: 2%;">
+
+                    <label style="margin-right: 5px;">Pagamento R$:<input type="text" value="<%=(parseFloat(pgto)+ parseFloat(gorjeta)).toFixed(2)%>" readonly disabled name="" class="input" id="pagamento"></label>
+
+                </div>
+                <div style="display: flex;margin-left: 4%;margin-top: 2%;">
+
+                    <label style="margin-right: 5px; text-align: center;">Total R$:<input type="text" value="<%=parseFloat(total  - parseFloat(pgto)).toFixed(2)%>" readonly disabled name="" class="input" id="total"></label>
+
+                </div>
+            </div>
+            <div class="row">
+                <%if(status==0){%>
+                    <% }%>
+                        <div style="display: block;margin-top: 2%;margin-left: 2%;">
+                            <label>&nbsp;
+                        <button id="pag" class="input green cell" onclick="pagamentos('<%=idCaixa%>');">Pagamentos</button></label>
+                        </div>
+
+                        <div style="display: block;margin-top: 2%;margin-left: 2%;">
+                            <label>&nbsp;
+                        <button class="input green" onclick="imprimir('<%=idCaixa%>')">Imprimir</button></label>
+                        </div>
+
+                        <div style="display: block;margin-top: 2%; margin-left: 2%;">
+                            <label>&nbsp;
+                        <%if(status==0){%>
+                            <!-- -->
+                    <% if(idMesa==''){%>
+                        <button class="input green cell" onclick="FinalizarPedido('<%=idCaixa%>');">Finalizar</button></label>
+
+                            <% }else{%>
+                                <button class="input green cell" onclick="fecharMesa('<%=idMesa%>');">Finalizar</button></label>
+
+                                <% }
+                     }%>
+
+                        </div>
+            </div>
+
+
+            <!-- </form> -->
+            <a href="/list/categorias/<%=idCaixa%>">
+                <div class="float-button">
+                    <span>+</span>
+                </div>
+            </a>
+        </div>
+        <!-- <div class="info">
+
+        </div> -->
+
+        <dialog class="mdl-dialog" id="modal-example">
+            <input type="hidden" id="idMesa">
+            <div class="mdl-dialog__content">
+                <div>
+                    <table id="sabores">
+                        <thead>
+                            <th>Código</th>
+                            <th>Sabor</th>
+                            <th class='center'>Fatias</th>
+                            <th>Obs</th>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
+                <div class="container-button left">
+                    <button onclick="closeClickHandler();" type="button" class="mdl-button">Close</button>
+                    <button onclick="imprimirPizza();" type="button" class="mdl-button">Imprimir</button>
+                </div>
+                <!-- <div class="container-button right">
+                <button type="button" onclick="usarMesa();" class="mdl-button">Usar</button>
+            </div> -->
+            </div>
+        </dialog>
+
+
+        <dialog class="mdl-dialog" id="modalpagamento">
+            <input type="hidden" id="id_caixa">
+            <div class="mdl-dialog__content">
+                <div>
+                    <table id="pgto" class="customers">
+                        <thead>
+                            <th>Valor</th>
+                            <th>Tipo</th>
+                            <th>Acao</th>
+                        </thead>
+                        <tbody>
+                            <%pagamentos.forEach(function(pagamento){%>
+
+                                <tr>
+                                    <td>
+                                        R$:
+                                        <% var gorjeta = typeof pagamentos.gorjeta === 'undefined' ? 0 : parseFloat(pagamentos.gorjeta);%>
+                                            <%=parseFloat((parseFloat(pagamento.valor) + parseFloat(gorjeta))).toFixed(2)%>
+                                    </td>
+                                    <td>
+                                        <%=pagamento.tipo%>
+                                    </td>
+                                    <td>
+                                        <button onclick="busca('<%=pagamento._id%>');">&#9999;</button>
+                                    </td>
+                                </tr>
+                                <%});%>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <label for="name">Cliente</label>
+                    <select name="cliente" class="form-control" id="cliente" style="margin-top:0;width: 100% !important; font-size: 16px;">
+                      <% clientes.forEach(function(cliente){
+                            if(cliente.codigo=='0000000001'){%>
+                                <option value="<%=cliente._id%>"><%=cliente.name%></option>                                
+                                <% }else{%>
+                                    <option value="<%=cliente._id%>"><%=cliente.name%></option>
+                        
+                        <% }});%>
+                    </select>
+                    <br>
+                    <input type="hidden" id="id_pagamento" name="id">
+                    <input type="hidden" name="" id="data">
+                    <label for="name">Pagamento</label>
+                    <select name="tipo" class="form-control" id="tipo" style="width: 100% !important; font-size: 16px;">
+                       <option value="dinheiro">Dinheiro</option>  
+                       <option value="Cartão de credito">Cartão de Credito</option>
+                       <option value="Cartão de Débito">Cartão de Débito</option>
+                       <option value="Transferência">Transferência Bancária</option>
+                    </select>
+                    <br>
+
+                    <input type="text" name="valor" class="campos" id="valorTotal">
+                    <!--- campo para receber o valor total-->
+                    <label for="name">Valor</label>
+                    <input type="text" name="valor" class="campos" onkeydown="troco();" id="valor">
+                    <label for="name">Troco</label>
+                    <input type="text" name="valor" class="campos" id="troco">
+                    <label for="">Taxa?</label>
+                    <input type="checkbox" name="" id="gorjeta" class="campos" onclick="desabilitar();" value="false">
+                    <input type="text" name="" id="funcionario" value="" class="campos" style="display: none;" placeholder="funcionario">
+                </div>
+                <br>
+            </div>
+            <hr>
+            <div class="mdl-dialog__actions mdl-dialog__actions--full-width">
+                <div class="container-button left">
+                    <button onclick="closeClickHandler();" type="button" class="mdl-button">Close</button>
+                    <button onclick="addPagamento();" type="button" id="addicionar" class="mdl-button">Adicionar</button>
+                </div>
+                <!-- <div class="container-button right">
+        <button type="button" onclick="usarMesa();" class="mdl-button">Usar</button>
+    </div> -->
+            </div>
+        </dialog>
+        <%- include('../componentes/rodape.ejs'); -%>
+</body>
+
+
+
+<script>
+    function dataAtualFormatada() {
+
+        var data = new Date(),
+            dia = data.getDate().toString(),
+            diaF = (dia.length == 1) ? '0' + dia : dia,
+            mes = (data.getMonth() + 1).toString(), //+1 pois no getMonth Janeiro começa com zero.
+            mesF = (mes.length == 1) ? '0' + mes : mes,
+            anoF = data.getFullYear();
+        return anoF + "-" + mesF + "-" + diaF;
+    }
+
+    var dialog = document.querySelector('#modal-example');
+    if (!dialog.showModal) {
+        dialogPolyfill.registerDialog(dialog);
+    }
+    var pagamento = document.querySelector('#modalpagamento');
+    if (!pagamento.showModal) {
+        dialogPolyfill.registerDialog(pagamento);
+    }
+
+    function pagamentos(idCaixa) {
+        document.querySelector('#data').value = dataAtualFormatada();
+        let subtotal = $('#subtotal').val();
+        let total = $('#total').val();
+        document.querySelector('#valor').value = total;
+        document.querySelector('#valorTotal').value = subtotal;
+        document.querySelector('#id_caixa').value = idCaixa;
+        document.querySelector('#troco').value = 0;
+        pagamento.showModal();
+
+    }
+
+    function troco() {
+        if ($('#valor').val() != '') {
+            var valor = $('#valorTotal').val();
+            valor = valor - parseFloat($('#valor').val());
+            valor = valor * (-1);
+            document.querySelector('#troco').value = valor;
+        } else {
+            document.querySelector('#troco').value = '';
+
+        }
+    }
+
+    function desabilitar() {
+        var status = document.getElementById('gorjeta');
+
+        if (status.checked) {
+            var total = $('#valorTotal').val();
+            document.getElementById('funcionario').disabled = false;
+            document.getElementById('funcionario').value = (parseFloat(total) * 0.1).toFixed(2);
+            $('#funcionario').addClass('mostrar');
+        } else {
+            document.getElementById('funcionario').disabled = true;
+            document.getElementById('funcionario').value = '';
+            // $('#funcionario').removeClass('mostrar');
+        }
+    }
+
+    function closeClickHandler() {
+        dialog.close();
+        pagamento.close();
+    };
+    // $("#pagamento").val(formatter.format($("#pagamento").val()));
+
+    function showClickHandler(idProdutoCaixa) {
+        // dialog.querySelector('#idMesa').value = idMesa;
+        $.ajax({
+            type: 'get',
+            url: '/caixa/getpizzas/' + idProdutoCaixa,
+            contentType: 'application/json'
+        }).done(function(data) {
+            console.log(data);
+            let table = document.querySelector("table#sabores tbody");
+            let tr = '';
+            for (let index = 0; index < data.pizzas.length; index++) {
+                const element = data.pizzas[index];
+                tr += `
+                        <tr>
+                            <td>${element.produto.codigo}</td>
+                            <td>${element.produto.name}</td>
+                            <td class='center'>${element.fatias}</td>
+                            <td class='center'>${element.observacao}</td>
+                        </tr>
+                    `;
+            }
+            table.innerHTML = tr;
+        }).fail(function(msg) {
+            console.log('FAIL');
+        }).always(function(msg) {
+            console.log('ALWAYS');
+        });
+        dialog.showModal();
+    };
+    // var total = 0.00;
+    // $("#subtotal").val(formatter.format($("#subtotal").val()));
+
+
+    let moneys = document.querySelectorAll('td.money');
+    for (let index = 0; index < moneys.length; index++) {
+        const element = moneys[index];
+        // console.log(element, element.innerText);
+        element.innerText = formatter.format(element.innerText);
+    }
+
+
+
+    function sucess(msg = 'Adicionado com Sucesso!', recarregar = false) {
+        $(".notify").toggleClass("active");
+        $(".notify").toggleClass("success");
+        $("#notifyType").html(msg);
+        $(".notify").show();
+
+        setTimeout(function() {
+            $(".notify").removeClass("active");
+            $(".notify").removeClass("success");
+            $(".notify").hide();
+            if (recarregar) {
+                goAtualiza();
+            }
+        }, 1000);
+    }
+
+    function failure(msg = 'Error ao adicionar!') {
+        $(".notify").addClass("active");
+        $(".notify").addClass("failure");
+        $("#notifyType").html(msg);
+        $(".notify").show();
+
+        setTimeout(function() {
+            $(".notify").removeClass("active");
+            $(".notify").removeClass("failure");
+            $(".notify").hide();
+        }, 1000);
+    }
+
+    $('.codigo').on('keypress', function(event) {
+        if (event.which == 13) {
+            event.preventDefault();
+            getProdutoByCod(this.value);
+        }
+    });
+
+    function remover(id) {
+        let caixa = $('#idCaixa').val();
+        $.ajax({
+                method: "DELETE",
+                url: `/produtocaixa/${caixa}/${id}`
+            })
+            .done(function(dados) {
+                sucess("Removido com sucesso", true);
+            })
+            .fail(function(jqXHR, textStatus, msg) {
+                failure("Error ao processar solicitação");
+            });
+    }
+
+    function getProdutoByCod(codigo) {
+        let quantidade = document.querySelector('#quantidade');
+        $.ajax({
+                method: "GET",
+                url: "/list/produto",
+                data: {
+                    ativo: true,
+                    codigo: codigo,
+                    refInterna: codigo
+                }
+            })
+            .done(function(dados) {
+                // console.log(dados);
+                let tBody = document.querySelector('table#listItens tbody');
+                for (let index = 0; index < dados.length; index++) {
+                    const element = dados[index];
+                    let tr = document.createElement('tr');
+                    populaTR(tr, element, quantidade.value);
+                    tBody.appendChild(tr);
+                }
+            })
+            .fail(function(jqXHR, textStatus, msg) {
+                alert(msg);
+            });
+    }
+
+    function populaTR(tr, item, quantidade) {
+        tr.appendChild(createTD(item.codigo));
+        tr.appendChild(createTD(item.name));
+        tr.appendChild(createTD(quantidade));
+        tr.appendChild(createTD(item.precoVenda.$numberDecimal));
+        tr.appendChild(createTD((quantidade * item.precoVenda.$numberDecimal).toFixed(2)));
+        total = Number.parseFloat(total) + Number.parseFloat((quantidade * item.precoVenda.$numberDecimal).toFixed(2));
+        $("#subtotal").val(total.toFixed(2));
+    }
+
+    function createTD(value) {
+        let td = document.createElement('td');
+        let text = document.createTextNode(value);
+        td.appendChild(text);
+        return td;
+    }
+
+    function FinalizarPedido(idCaixa) {
+        var total = $('#total').val();
+        var status = $('#status').val();
+        if (total == "0.00" && status == 0) {
+
+            $.ajax({
+                    method: 'PUT',
+                    url: "/delivery/finalizar/" + idCaixa,
+                    data: {
+                        caixa: idCaixa,
+                    },
+                    success: function() {
+                        window.location.href = "/delivery/delivery";
+                    }
+                })
+                // console.log(total);
+        } else {
+            window.alert('Valor diferente de zero');
+        }
+    }
+
+
+
+    function fecharMesa(idMesa) {
+        var total = $('#total').val();
+        var status = $('#status').val();
+        if (total == "0.00" && status == 0) {
+            $.ajax({
+                type: 'PUT',
+                url: '/close/mesa/' + idMesa,
+                contentType: 'application/json',
+                data: JSON.stringify({}), // access in body
+            }).done(function(data) {
+                window.location.href = "/list/mesas";
+            }).fail(function(msg) {
+                console.log('FAIL');
+            }).always(function(msg) {
+                console.log('ALWAYS');
+            });
+        } else {
+            window.alert('Valor diferente de zero');
+        }
+    }
+
+    function busca(idPagamento) {
+        $.ajax({
+            method: 'PUT',
+            url: '/pagamento/' + idPagamento,
+            success: function(resposta) {
+                let gorjeta = typeof resposta.gorjeta === 'undefined' ? 0 : parseFloat(resposta.gorjeta.$numberDecimal);
+                $('#tipo').val(resposta.tipo);
+                $('#id_pagamento').val(resposta._id);
+                $('#cliente').val(resposta.cliente);
+                $('#valor').val(parseFloat(resposta.valor.$numberDecimal) + parseFloat(gorjeta));
+                if (gorjeta > 0) {
+                    document.getElementById('gorjeta').checked = true;
+                    $('#funcionario').addClass('mostrar');
+                }
+                $('#troco').val(gorjeta);
+                $('#funcionario').val(resposta.funcionario);
+
+
+            }
+        });
+    }
+
+    function addPagamento() {
+
+        var id = $('#id_pagamento').val();
+        var valor = $('#valor').val();
+        var troco = $('#troco').val();
+        var gorjeta = $('#funcionario').val();
+        var createdAt = $('#data').val();
+        var check = document.getElementById('gorjeta');
+        if (gorjeta == '') {
+            gorjeta = 0;
+        }
+        if (troco == 0 && check.checked == false) {
+            dados = {
+                caixa: $('#id_caixa').val(),
+                cliente: $('#cliente').val(),
+                tipo: $('#tipo').val(),
+                valor: $('#valor').val(),
+                createdAt: createdAt,
+                gorjeta: 0,
+                funcionario: ' ',
+                id: id
+            }
+            $.ajax({
+                method: 'PUT',
+                url: '/adicionar/pagamento',
+                data: dados,
+                success: function(resposta) {
+                    window.location.reload(true);
+                }
+
+            });
+        } else if (troco > 0 && check.checked == false) {
+            dados = {
+                caixa: $('#id_caixa').val(),
+                cliente: $('#cliente').val(),
+                tipo: $('#tipo').val(),
+                valor: valor - troco,
+                createdAt: createdAt,
+                gorjeta: 0,
+                funcionario: '',
+                id: id
+            }
+            $.ajax({
+                method: 'PUT',
+                url: '/adicionar/pagamento',
+                data: dados,
+                success: function(resposta) {
+                    window.location.reload(true);
+                }
+
+            });
+        } else if (troco > 0 && check.checked == true) {
+            dados = {
+                caixa: $('#id_caixa').val(),
+                cliente: $('#cliente').val(),
+                tipo: $('#tipo').val(),
+                valor: valor - troco,
+                gorjeta: gorjeta,
+                createdAt: createdAt,
+                funcionario: $('#funcionario').val(),
+                id: id
+            }
+            $.ajax({
+                method: 'PUT',
+                url: '/adicionar/pagamento',
+                data: dados,
+                success: function(resposta) {
+                    window.location.reload(true);
+                }
+
+            });
+        } else if (troco == 0 && check.checked == true) {
+            dados = {
+                caixa: $('#id_caixa').val(),
+                cliente: $('#cliente').val(),
+                tipo: $('#tipo').val(),
+                valor: valor - troco,
+                gorjeta: gorjeta,
+                createdAt: createdAt,
+                funcionario: $('#funcionario').val(),
+                id: id
+            }
+            $.ajax({
+                method: 'PUT',
+                url: '/adicionar/pagamento',
+                data: dados,
+                success: function(resposta) {
+                    window.location.reload(true);
+                }
+
+            });
+        }
+
+        // console.log(dados);
+
+    }
+
+    function imprimir(idCaixa) {
+
+        $.ajax({
+            type: 'GET',
+            url: '/caixa/impressao/' + idCaixa,
+            contentType: 'application/json' // access in body
+        }).done(function(da) {
+
+
+        }).fail(function(msg) {
+            console.log('FAIL');
+        }).always(function(msg) {
+            console.log('ALWAYS');
+        });
+
+        // window.open('/caixa/impressao?id=' + idCaixa, '_blank');
+
+
+    }
+
+    jQuery(document).ready(function() {
+        var vezes = <%=i%>;
+        // console.log(i);
+
+        for (let index = 1; index <= vezes; index++) {
+            // console.log(index);
+
+            $('#diminuir' + index).click(function(event) {
+                // event.preventDefault();
+                var idProduto = $('#produto' + index).val();
+                var qtde = $('#qtde' + index).val();
+                if (qtde > 1) {
+                    qtde -= 1;
+                    $('#qtde').val(qtde);
+                    $.ajax({
+                        method: 'PUT',
+                        url: '/produto/atualiza',
+                        data: {
+                            id: idProduto,
+                            tipo: 1,
+                            quantidade: qtde
+                        },
+                        success: function(resposta) {
+                            window.location.reload(true);
+                        }
+
+                    });
+                }
+            });
+
+            $('#aumentar' + index).click(function(event) {
+                // event.preventDefault();
+                var idProduto = $('#produto' + index).val();
+                var qtde = $('#qtde' + index).val();
+                console.log(idProduto);
+                if (qtde >= 1) {
+                    qtde++;
+                    $('#qtde' + index).val(qtde);
+                    $.ajax({
+                        method: 'PUT',
+                        url: '/produto/atualiza',
+                        data: {
+                            id: idProduto,
+                            tipo: 0,
+                            quantidade: qtde
+                        },
+                        success: function(resposta) {
+                            window.location.reload(true);
+                        }
+
+                    });
+                }
+            });
+
+        }
+    });
+</script>
+
+</html>

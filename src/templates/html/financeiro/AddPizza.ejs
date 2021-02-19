@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Pizza</title>
+    <base href="/">
+    <link rel="stylesheet" type="text/css" href="/templates/css/liststyle.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
+    <link rel="stylesheet" type="text/css" href="/templates/css/produto.css">
+    <link rel="stylesheet" href="/templates/css/estilo.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.1/jquery.maskMoney.min.js"></script>
+    <style>
+        label {
+            color: white !important;
+            margin-bottom: 0% !important;
+        }
+        
+        input {
+            background-color: white !important;
+            color: black !important;
+        }
+        
+        .trinta {
+            width: 30% !important;
+        }
+        
+        .search {
+            position: relative;
+            color: #aaa;
+            font-size: 16px;
+            width: 100%;
+        }
+        
+        .search {
+            display: inline-block;
+        }
+        
+        .search input {
+            width: 100% !important;
+        }
+        
+        .search .fa-search {
+            position: absolute;
+            right: 3% !important;
+            top: 11%;
+        }
+        
+        @media only screen and (max-width:1200px) {
+            .search .fa-search {
+                right: 4% !important;
+            }
+        }
+        
+        @media only screen and (max-width:760px) {
+            .search .fa-search {
+                right: 5% !important;
+            }
+        }
+        
+        @media only screen and (max-width:570px) {
+            .search .fa-search {
+                right: 7% !important;
+            }
+        }
+        
+        .search .fa-search {
+            left: auto;
+            right: 10px;
+        }
+        
+        input[list] {
+            background: red;
+        }
+        
+        input::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+        
+        .active {
+            padding: 0px 0px !important;
+        }
+        
+        div.table {
+            width: 100% !important;
+            margin-left: 0 !important;
+            height: 40vh;
+            max-height: 40vh;
+            align-items: baseline !important;
+            overflow-y: scroll;
+            overflow-x: scroll;
+        }
+        
+        input.fatias {
+            /* width: 100% !important; */
+        }
+        
+        button.fixed {
+            background-color: green;
+        }
+        div.fixed-float{
+            position: absolute;
+            right: 9%;
+            bottom: 3%;
+        }
+        body div.container1 div.container-form {
+            flex-direction: column;
+        }
+    </style>
+
+    <style>
+        .success{
+            background-color: green !important;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../componentes/menu.ejs'); -%>
+
+    <div class="notify"><span id="notifyType" class=""></span></div>
+
+        <div class="container1">
+            <div class="container-form">
+                <div id="#responsive" class="itens">
+                    <div class="informations">
+                        <header style="padding-bottom: 2%;font-size: 24pt;">Adicionar Pizza</header>
+                        <main>
+                            <div class="row">
+                                <fieldset class='float-label-field'>
+                                    <label for="quantidade">Quantidade de Fatias</label>
+                                    <input id="quantidade" class='campo-texto trinta' required placeholder="Quantidade de Fatias" value="8" name="quantidade" type='number'>
+                                </fieldset>
+                            </div>
+                            <div class="row" style="align-items: baseline !important; flex-direction: column !important;">
+                                <label for="">Pizzas</label>
+                                <div class="wrapper" style="margin-left: 0px !important;">
+                                    <div class="search-input">
+                                        <input autocomplete="off" type="text" name="search" id="search" placeholder="Pesquisar Pizza">
+                                        <div class="autocom-box">
+                                            <!-- <li>Teste 1</li>
+                                            <li>Teste 2</li> -->
+                                        </div>
+                                        <span class="fa fa-search icon">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="17.968" height="29.001" viewBox="0 0 32.968 29.001">
+                                            <g id="Grupo_18" data-name="Grupo 18" transform="translate(-1247 -318)">
+                                              <g id="Elipse_2" data-name="Elipse 2" transform="translate(1247 318)" fill="none" stroke="#000459" stroke-width="4">
+                                                <circle cx="12.5" cy="12.5" r="12.5" stroke="none"/>
+                                                <circle cx="12.5" cy="12.5" r="10.5" fill="none"/>
+                                              </g>
+                                              <path id="Caminho_5" data-name="Caminho 5" d="M1268.96,337.5l9.744,7.951" fill="none" stroke="#000459" stroke-width="4"/>
+                                            </g>
+                                          </svg>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="row table">
+                                    <table class="itens">
+                                        <thead>
+                                            <th colspan="5">Pizzas</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <input name="borda" onclick="addValue();" type="radio" data-tipo="0" data-value="0" checked> Sem Borda
+                                                    <input name="borda" onclick="addValue();" type="radio" data-tipo="1" data-value="4"> Catupiry
+                                                    <br>
+                                                    <input name="borda" onclick="addValue();" type="radio" data-tipo="2" data-value="6"> Cheddar
+                                                    <input name="borda" onclick="addValue();" type="radio" data-tipo="3" data-value="5"> Cheddar e Catupiry
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </main>
+                    </div>
+                </div>
+                <input type="text" name="totalGeral" class="campo-texto" value="0,00" disabled readonly size="6" style="width: 15% !important;">
+            </div>
+            <div class="fixed-float">
+            <button class="fixed" id="finalizar" style="right: 22%; background-color: orange;" onclick="finalizar();">Finalizar</button>
+            <button class="fixed" id="addPizza" onclick="validate();">Adicionar</button>
+            </div>
+        </div>
+
+        <style>
+            label {
+                line-height: 16px !important;
+            }
+            body div.container1 {
+                height: 94vh !important;
+            }
+        </style>
+
+        <script>
+            var btnAddPizza = document.getElementById('addPizza');
+            var produtosCaixa = [];
+            var suggestions = [];
+            var valores = [];
+            var adicionados = [];
+            <% produtos.forEach(function(produto){ %>
+            suggestions.push({
+                _id: '<%=produto._id%>',
+                codigo: '<%=produto.codigo%>',
+                name: '<%=produto.name%>',
+                quantidade: '<%=produto.quantidade%>',
+                precoVenda: '<%= delivery ?  25.0: produto.precoVenda%>'
+            });
+
+            valores.push({
+                _id: '<%=produto._id%>',
+                codigo: '<%=produto.codigo%>',
+                name: '<%=produto.name%>',
+                quantidade: '<%=produto.quantidade%>',
+                precoVenda: '<%= delivery ?  25.00: produto.precoVenda%>',
+                precoVendaQuatro: '<%= delivery ?  25.00: produto.precoVendaQuatro%>',
+                precoVendaSeis: '<%= delivery ?  25.00: produto.precoVendaSeis%>',
+                precoVendaOito: '<%= delivery ?  25.00: produto.precoVendaOito%>',
+                precoVendaDez: '<%= delivery ?  25.00: produto.precoVendaDez%>'
+            });
+
+            <% }); %>
+
+            function getValueForFatias(quant, id) {
+                for (let index = 0; index < valores.length; index++) {
+                    const element = valores[index];
+                    if (element._id == id) {
+                        console.log(quant, element);
+                        switch (quant) {
+                            case '4':
+                                return element.precoVendaQuatro;
+                                break;
+                            case '6':
+                                return element.precoVendaSeis;
+                                break;
+                            case '8':
+                                return element.precoVendaOito;
+                                break;
+                            case '10':
+                                return element.precoVendaDez;
+                                break;
+                        }
+                    }
+                }
+                return 0;
+            }
+
+            const searchWrapper = document.querySelector('.search-input');
+            const inputBox = searchWrapper.querySelector('input');
+            const suggBox = searchWrapper.querySelector('.autocom-box');
+
+            inputBox.onkeyup = (e) => {
+                let userData = e.target.value;
+                let emptyArray = [];
+                if (userData) {
+                    emptyArray = suggestions.filter((data) => {
+                        return data.name.toLocaleLowerCase().includes(userData.toLocaleLowerCase());
+                    });
+                    emptyArray = emptyArray.map((data) => {
+                        return data = `<li onclick="addItem('${data._id}');">${data.name}</li>`;
+                    });
+                    searchWrapper.classList.add('active');
+                } else {
+                    searchWrapper.classList.remove('active');
+                }
+                showSuggestions(emptyArray);
+            };
+
+            function showSuggestions(list) {
+                let listData;
+                if (!list.length) {
+                    listData = '<li>Nenhum Item Encontrado</li>';
+                } else {
+                    listData = list.join('');
+                }
+                suggBox.innerHTML = listData;
+            }
+
+            function addItem(id) {
+                let item = getItemById(id);
+                item.observacao = "";
+                let quantFatias = document.querySelector('input[name=quantidade]').value;
+
+                item.precoVenda = getValueForFatias(quantFatias, id);
+                console.log(item);
+
+                if (typeof getExistsById(item._id) == 'undefined') {
+
+                    let table = document.querySelector('table.itens tbody');
+                    let title = document.createElement('tr');
+                    let tr = document.createElement('tr');
+                    let tdTitle = document.createElement('td');
+
+                    tr.setAttribute('id', `id_${item._id}`);
+                    tdTitle.setAttribute('colspan', 5);
+                    title.appendChild(tdTitle);
+                    table.appendChild(title);
+                    table.appendChild(tr);
+                    // tr.innerHTML += getInputRadioGroup();
+                    for (var prop in item) {
+                        if (item.hasOwnProperty(prop)) {
+                            if (prop != '_id') {
+                                console.log(item[prop], prop);
+                                let td = document.createElement('td');
+                                if (prop == 'quantidade') {
+                                    let input = document.createElement('input');
+                                    input.setAttribute('class', 'campo-texto fatias');
+                                    input.setAttribute('type', 'number');
+                                    input.setAttribute('size', '3');
+                                    input.value = 0;
+                                    td.appendChild(input);
+                                    // td.style.width = '20%';
+                                    tr.appendChild(td);
+                                } else {
+                                    if (prop == 'precoVenda') {
+                                        let input = document.createElement('input');
+                                        input.setAttribute('class', 'campo-texto precos money');
+                                        input.setAttribute('type', 'text');
+                                        input.setAttribute('id', 'valor_'+item['_id']);
+                                        input.setAttribute('size', '6');
+                                        input.value = Number.parseFloat(item[prop]).toFixed(2);
+                                        td.appendChild(input);
+                                        // td.style.width = '20%';
+                                        tr.appendChild(td);
+                                        input.onblur = () => {
+                                            addValue();
+                                        }
+                                    } else {
+                                        if (prop == 'observacao') {
+                                            let input = document.createElement('input');
+                                            input.setAttribute('class', 'campo-texto observacao');
+                                            input.setAttribute('type', 'text');
+                                            input.style.width = "100%";
+                                            td.appendChild(input);
+                                            // td.style.width = '30%';
+                                            td.setAttribute('colspan', 3);
+                                            tr.appendChild(td);
+                                        } else {
+                                            if (prop == 'codigo') {
+                                                // let text = document.createTextNode(item[prop]);
+                                                // td.appendChild(text);
+                                                // title.appendChild(td);
+                                                tdTitle.innerText += item[prop] + "  -  ";
+                                            }
+                                            if (prop == 'name') {
+                                                tdTitle.innerText += item[prop];
+                                            }
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    adicionados.push(item);
+                }
+                searchWrapper.classList.remove('active');
+                $(".money").maskMoney({
+                    prefix: '',
+                    // allowNegative: true,
+                    thousands: '.',
+                    decimal: ',',
+                    allowZero: false,
+                    defaultZero: false
+                });
+                $('.money').each(function() { // function to apply mask on load!
+                    $(this).maskMoney('mask', $(this).val());
+                });
+                
+                addValue();
+            }
+
+            function addValue(){
+                atualizaFatias();
+                let preco = getMaxValue(adicionados);
+                // let quantFatias = document.querySelector('input[name=quantidade]').value;
+
+                let element = document.querySelector('input[name=borda]:checked');
+
+                // let precoVenda = getValueForFatias(quantFatias, id);
+
+                let itemValor = document.querySelector('input[name=totalGeral]');
+
+                let valorBorda = element.getAttribute('data-value');
+
+                itemValor.value = formatValue( Number.parseFloat(preco) + Number.parseFloat(valorBorda) );
+            }
+
+            function formatValue(value) {
+                let formatter = new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL',
+                    minimumFractionDigits: 2,
+                });
+                return formatter.format(value).replace('R$','').trim();
+            }
+
+            function getItemById(id) {
+                return suggestions.find(x => x._id == id);
+            }
+
+            function getExistsById(id) {
+                return adicionados.find(x => x._id == id);
+            }
+
+            function getDecimalFromFormatBrazil(value) {
+                String.prototype.replaceAll = String.prototype.replaceAll || function(needle, replacement) {
+                    return this.split(needle).join(replacement);
+                };
+                value = value.replaceAll('.', '');
+                value = value.replace(',', '.');
+                value = Number.parseFloat(value).toFixed(2);
+                value = (typeof value == 'undefined' || isNaN(value)) ? 0 : value; 
+                return Number.parseFloat(value);
+            }
+
+            function atualizaFatias() {
+                for (let index = 0; index < adicionados.length; index++) {
+                    const element = adicionados[index];
+                    let newPreco = document.querySelector(`table.itens tbody tr#id_${element._id} td input.precos`).value;
+                    // console.log(newPreco);
+                    adicionados[index].precoVenda = getDecimalFromFormatBrazil(newPreco);
+                }
+            }
+
+            function openWindowWithPost(url, datas) {
+                var form = document.createElement("form");
+                form.target = "_blank";
+                form.method = "POST";
+                form.action = url;
+                form.style.display = "none";
+
+                for (const data of datas) {
+                    //for (var key in data) {
+                    var input = document.createElement("input");
+                    input.type = "hidden";
+                    input.name = "ids[]";
+                    input.value = data._id;
+                    form.appendChild(input);
+                    //}   
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+                document.body.removeChild(form);
+            }
+
+            function getMaxValue(pizzas){
+                let preco = (pizzas.length > 0) ? pizzas[0].precoVenda : 0;
+                for (let index = 0; index < pizzas.length; index++) {
+                    const element = pizzas[index];
+                    if (element.precoVenda > preco) {
+                        preco = element.precoVenda;
+                    }
+                }
+                return preco;
+            }
+
+            function finalizar(){
+                let query = '?caixaId=<%=idCaixa%>&';
+                for (let index = 0; index < produtosCaixa.length; index++) {
+                    const element = produtosCaixa[index];
+                    if ( (produtosCaixa.length-1) == index ) {
+                        query += `caixa[]=${element}`;
+                    } else {
+                        query += `caixa[]=${element}&`;
+                    }
+
+                }
+                $.ajax({
+                        type: 'GET',
+                        url: '/relatorio/impressao/impressaopizza/' + 1 + query,
+                        contentType: 'application/json' 
+                    }).done(function(da) {
+                        // console.log(da);
+                        btnAddPizza.disabled = false;
+                        window.location = '/financeiro/caixa/' + '<%=idCaixa%>';
+                    }).fail(function(msg) {
+                        console.log('FAIL');
+                        btnAddPizza.disabled = false;
+                        window.location = '/financeiro/caixa/' + '<%=idCaixa%>';
+                    }).always(function(msg) {
+                        console.log('ALWAYS');
+                    });
+                
+            }
+
+            function addPizza() {
+                atualizaFatias();
+                // console.log(adicionados);return;
+                console.log(adicionados);
+                let quantFatias = document.querySelector('input[name=quantidade]').value;
+
+                let itemValor = document.querySelector('input[name=totalGeral]');
+                let borda     = document.querySelector('input[name=borda]:checked');
+
+                // let maxCallback = (acc, cur) => Math.max(acc.precoVenda, cur.precoVenda);
+                // let preco = (adicionados.length == 1) ? adicionados[0].precoVenda : adicionados.reduce(maxCallback);
+                let preco = getDecimalFromFormatBrazil(itemValor.value);
+                let produtos = adicionados.map(a => a._id);
+                let pizzas = [];
+                for (let index = 0; index < produtos.length; index++) {
+                    const element = produtos[index];
+                    //console.log(element);
+                    let fatias = document.querySelector(`table.itens tbody tr#id_${element} td input.fatias`).value;
+                    let observacao = document.querySelector(`table.itens tbody tr#id_${element} td input.observacao`).value;
+                    let item = {
+                        fatias: fatias,
+                        observacao: observacao,
+                        valor: getExistsById(element).precoVenda,
+                        produto: element
+                    };
+                    pizzas.push(item);
+                }
+                let data = {
+                    quantidade: quantFatias,
+                    valorUnitario: preco,
+                    borda: borda.getAttribute('data-tipo'),
+                    valorBorda: borda.getAttribute('data-value'),
+                    pizzas: pizzas
+                };
+                console.log(data);
+                
+                btnAddPizza.disabled = true;
+
+                $.ajax({
+                    type: 'PUT',
+                    url: '/financeiro/addpizza/' + '<%=idCaixa%>',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data), // access in body
+                }).done(function(datas) {
+                    console.log(datas);
+                    btnAddPizza.disabled = false;
+
+                    sucess();
+                    
+                    produtosCaixa.push(datas._id);
+
+                    let table = document.querySelector('table.itens tbody');
+                    let trs = table.querySelectorAll('tr');
+                    for (let index = 0; index < trs.length; index++) {
+                        const tr = trs[index];
+                        if (index > 0) {
+                            table.removeChild(tr);
+                        }
+                    }
+                    adicionados = [];
+                    let itemValor = document.querySelector('input[name=totalGeral]');
+                    itemValor.value = '0,00';
+
+                    let bordas = document.querySelectorAll('input[name=borda]');
+                    bordas[0].checked = true;
+                    //table.innerHTML = '';
+                    
+                    //window.location = '/financeiro/caixa/' + '<%=idCaixa%>';
+                }).fail(function(msg) {
+                    console.log('FAIL');
+                    btnAddPizza.disabled = false;
+                    failure();
+                }).always(function(msg) {
+                    console.log('ALWAYS');
+                });
+            }
+
+            function sucess() {
+                $(".notify").toggleClass("active");
+                $(".notify").toggleClass("success");
+                $("#notifyType").html("Cadastrado com Sucesso!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("success");
+                    $(".notify").hide();
+                }, 5000);
+            }
+
+            function failure() {
+                $(".notify").addClass("active");
+                $(".notify").addClass("failure");
+                $("#notifyType").html("Error ao adicionar!");
+                $(".notify").show();
+
+                setTimeout(function() {
+                    $(".notify").removeClass("active");
+                    $(".notify").removeClass("failure");
+                    $(".notify").hide();
+                }, 5000);
+            }
+
+            function validate() {
+                if (adicionados.length == 0) {
+                    alert("Adicione pelo menos um sabor");
+                    return false;
+                }
+                // let quantFatias = document.querySelector('input[name=quantidade]').value;
+                // let sumFatias = 0;
+                // for (let index = 0; index < adicionados.length; index++) {
+                //     const element = adicionados[index];
+                //     //console.log(document.querySelector(`#id_${element._id} .fatias`), document.querySelector(`#id_${element._id} .fatias`).value);
+                //     sumFatias += Number(document.querySelector(`#id_${element._id} .fatias`).value);
+                // }
+                // if (quantFatias != sumFatias) {
+                //     alert("Soma das fatias é diferente da quantidade de fatias!");
+                //     return false;
+                // }
+                addPizza();
+            }
+        </script>
+        <%- include('../componentes/rodape.ejs'); -%>
+
+            <style>
+                table {
+                    /* width: auto !important; */
+                    min-width: auto !important;
+                }
+                
+                tr {
+                    border-bottom: 1px solid #5d5d5d;
+                }
+                
+                input[type="text"] {
+                    width: 100% !important;
+                }
+            </style>
+</body>
+
+</html>
