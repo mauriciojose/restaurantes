@@ -34,6 +34,8 @@ module.exports = {
         await Caixa.findById(req.params.id, (err, caixa) => {
             // console.log(caixa);
             if (err) { return res.status(500).json({ error: "ID INVALID" }); }
+            res.set('Cache-Control', 'no-store');
+            res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
             res.render(path.resolve('src/templates/html/cadastros/caixa'), {
                 idMesa: typeof caixa.mesa === 'undefined' ? '' : caixa.mesa._id,
                 idCaixa: caixa._id,
@@ -183,6 +185,7 @@ module.exports = {
                 }, 0);
                 totalGeral += element.total;
             }
+            res.set('Cache-Control', 'no-store');
             res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
             res.render(path.resolve('src/templates/html/list/caixas'), {
                 "cache": false,
