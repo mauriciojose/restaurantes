@@ -170,6 +170,9 @@ routes.delete('/produtocaixa/:idCaixa/:id', CaixaController.removeProduto);
 
 routes.put('/pagamento/:id', TokenServices.checkToken, PagamentoController.getById);
 routes.put('/adicionar/pagamento', TokenServices.checkToken, PagamentoController.addPag);
+routes.put('/remove/pagamento/:id', TokenServices.checkToken, PagamentoController.removeById);
+routes.put('/verifica/pagamento/:id', TokenServices.checkToken, PagamentoController.verificaById);
+
 
 // ---------------------------------------------------
 routes.get('/delivery/delivery', TokenServices.checkToken, DeliveryController.getAllView);
@@ -191,6 +194,7 @@ routes.put('/compra/cadastro', TokenServices.checkToken, CompraController.create
 
 routes.get('/relatorio/caixa', TokenServices.checkToken, function(req, res) { res.render(path.resolve('src/templates/html/relatorios/caixa')) });
 routes.post('/relatorio/caixa', TokenServices.checkToken, PagamentoController.getAllView);
-
-
+routes.put('/caderno/caixa', TokenServices.checkToken, PagamentoController.getAllCaderno);
+routes.get('/caderno/receber', TokenServices.checkToken, function(req, res) { res.render(path.resolve('src/templates/html/caderno/receber')) });
+routes.put('/caderno/receber', TokenServices.checkToken,PagamentoController.receberPag);
 module.exports = routes;

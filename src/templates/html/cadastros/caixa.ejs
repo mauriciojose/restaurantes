@@ -5,12 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Caixa</title>
+    <link rel="shortcut icon" href="/img/lanches.png" type="image/x-icon">
     <link rel="stylesheet" type="text/css" href="/templates/css/style.css">
     <link rel="stylesheet" type="text/css" href="/templates/css/caixa.css">
     <link rel="stylesheet" type="text/css" href="/templates/css/global.css">
     <style>
         .mdl-dialog {
             width: 100% !important;
+        }
+        
+        .pagamento {
+            height: 15em;
+            overflow: scroll;
         }
         
         @media (max-width: 48rem) {
@@ -136,10 +142,14 @@
                                                 <%=produto.produto.name%>
                                             </td>
                                             <td>
-                                                <a id="diminuir<%=i%>">&#10134</a>
-                                                <input type="hidden" id="produto<%=i%>" value="<%=produto._id%>">
-                                                <input type="text" disabled id="qtde<%=i%>" style="width: 4em; font-size:14px;text-align: center; color: #000458;background-color: white;" value="<%=produto.quantidade%>">
-                                                <a id="aumentar<%=i%>">&#10133</a>
+                                                <%if(status==0){%>
+
+                                                    <a id="diminuir<%=i%>">&#10134</a>
+                                                    <% }%>
+                                                        <input type="hidden" id="produto<%=i%>" value="<%=produto._id%>">
+                                                        <input type="text" disabled id="qtde<%=i%>" style="width: 4em; font-size:14px;text-align: center; color: #000458;background-color: white;" value="<%=produto.quantidade%>">
+                                                        <%if(status==0){%> <a id="aumentar<%=i%>">&#10133</a>
+                                                            <% }%>
                                             </td>
                                             <td class="money">
                                                 <%=produto.valorUnitario%>
@@ -221,11 +231,13 @@
 
 
             <!-- </form> -->
-            <a href="/list/categorias/<%=idCaixa%>">
-                <div class="float-button">
-                    <span>+</span>
-                </div>
-            </a>
+            <%if(status==0){%>
+                <a href="/list/categorias/<%=idCaixa%>">
+                    <div class="float-button">
+                        <span>+</span>
+                    </div>
+                </a>
+                <% }%>
         </div>
         <!-- <div class="info">
 
@@ -261,12 +273,14 @@
         <dialog class="mdl-dialog" id="modalpagamento">
             <input type="hidden" id="id_caixa">
             <div class="mdl-dialog__content">
-                <div>
-                    <table id="pgto" class="customers">
+                <div class="pagamento">
+
+                    <table id=" pgto " class="customers ">
                         <thead>
                             <th>Valor</th>
                             <th>Tipo</th>
-                            <th>Acao</th>
+                            <th>Editar</th>
+                            <th>Excluir</th>
                         </thead>
                         <tbody>
                             <%pagamentos.forEach(function(pagamento){%>
@@ -281,24 +295,33 @@
                                         <%=pagamento.tipo%>
                                     </td>
                                     <td>
-                                        <button onclick="busca('<%=pagamento._id%>');">&#9999;</button>
+                                        <button class="btnEditar" onclick="busca( '<%=pagamento._id%>'); ">&#9745;</button>
+                                        
+                                    </td>
+                                    <td>
+                                        <button class="btnExcluir" onclick="removePag( '<%=pagamento._id%>'); ">&#9940</button>
                                     </td>
                                 </tr>
                                 <%});%>
                         </tbody>
                     </table>
+
                 </div>
                 <div>
-                    <label for="name">Cliente</label>
-                    <select name="cliente" class="form-control" id="cliente" style="margin-top:0;width: 100% !important; font-size: 16px;">
+                    <label for="name ">Cliente</label>
+                    <select name="cliente " class="form-control " id="cliente" style="margin-top:0;width: 100% !important; font-size: 16px; ">
                       <% clientes.forEach(function(cliente){
                             if(cliente.codigo=='0000000001'){%>
-                                <option value="<%=cliente._id%>"><%=cliente.name%></option>                                
-                                <% }else{%>
-                                    <option value="<%=cliente._id%>"><%=cliente.name%></option>
-                        
-                        <% }});%>
-                    </select>
+                                <option value="<%=cliente._id%>">
+                    <%=cliente.name%>
+                        </option>
+                        <% }else{%>
+                            <option value="<%=cliente._id%>">
+                                <%=cliente.name%>
+                            </option>
+
+                            <% }});%>
+                                </select>
                     <br>
                     <input type="hidden" id="id_pagamento" name="id">
                     <input type="hidden" name="" id="data">
@@ -308,15 +331,16 @@
                        <option value="Cartão de credito">Cartão de Credito</option>
                        <option value="Cartão de Débito">Cartão de Débito</option>
                        <option value="Transferência">Transferência Bancária</option>
+                       <option value="Carteira">Carteira</option>
                     </select>
                     <br>
 
-                    <input type="text" name="valor" class="campos" id="valorTotal">
+                    <input type="hidden" disabled name="valor" class="campos" id="valorTotal">
                     <!--- campo para receber o valor total-->
                     <label for="name">Valor</label>
-                    <input type="text" name="valor" class="campos" onkeydown="troco();" id="valor">
+                    <input type="number" step="0.01" name="valor" class="campos" onkeydown="troco();" id="valor">
                     <label for="name">Troco</label>
-                    <input type="text" name="valor" class="campos" id="troco">
+                    <input type="number" step="0.01" name="valor" class="campos" id="troco">
                     <label for="">Taxa?</label>
                     <input type="checkbox" name="" id="gorjeta" class="campos" onclick="desabilitar();" value="false">
                     <input type="text" name="" id="funcionario" value="" class="campos" style="display: none;" placeholder="funcionario">
@@ -375,8 +399,10 @@
     function troco() {
         if ($('#valor').val() != '') {
             var valor = $('#valorTotal').val();
-            valor = valor - parseFloat($('#valor').val());
-            valor = valor * (-1);
+            valor = parseFloat($('#valor').val()) - valor;
+            if (valor < 0) {
+                valor = 0;
+            }
             document.querySelector('#troco').value = valor;
         } else {
             document.querySelector('#troco').value = '';
@@ -395,7 +421,7 @@
         } else {
             document.getElementById('funcionario').disabled = true;
             document.getElementById('funcionario').value = '';
-            // $('#funcionario').removeClass('mostrar');
+            $('#funcionario').removeClass('mostrar');
         }
     }
 
@@ -593,7 +619,7 @@
                 $('#tipo').val(resposta.tipo);
                 $('#id_pagamento').val(resposta._id);
                 $('#cliente').val(resposta.cliente);
-                $('#valor').val(parseFloat(resposta.valor.$numberDecimal) + parseFloat(gorjeta));
+                $('#valor').val(parseFloat(resposta.valor.$numberDecimal));
                 if (gorjeta > 0) {
                     document.getElementById('gorjeta').checked = true;
                     $('#funcionario').addClass('mostrar');
@@ -617,6 +643,7 @@
         if (gorjeta == '') {
             gorjeta = 0;
         }
+        if($('#tipo').val()!='Carteira'){
         if (troco == 0 && check.checked == false) {
             dados = {
                 caixa: $('#id_caixa').val(),
@@ -697,6 +724,64 @@
                 }
 
             });
+
+        }
+        }else{
+            var cliente= $('#cliente').val();
+            $.ajax({
+                method: 'PUT',
+                url: '/verifica/pagamento/'+ cliente,
+                dataType:"json",
+                success: function(resposta) {
+                   if(resposta>=100){
+                    var resposta= confirm("O crédito para este cliente ja esta em R$:"+resposta+"! Caso deseja add este caixa na Carteira clique em OK");
+                        if(resposta==true){
+                            dados = {
+                                        caixa: $('#id_caixa').val(),
+                                        cliente: $('#cliente').val(),
+                                        tipo: $('#tipo').val(),
+                                        valor: $('#valor').val(),
+                                        createdAt: createdAt,
+                                        gorjeta: 0,
+                                        funcionario: ' ',
+                                        id: id
+                                    }
+                                    $.ajax({
+                                        method: 'PUT',
+                                        url: '/adicionar/pagamento',
+                                        data: dados,
+                                        success: function(resposta) {
+                                            window.location.reload(true);
+                                        }
+
+                                    });
+                        }
+                   }else{
+                    dados = { 
+                                  caixa: $('#id_caixa').val(),
+                                  cliente: $('#cliente').val(),
+                                  tipo: $('#tipo').val(),
+                                  valor: $('#valor').val(),
+                                  createdAt: createdAt,
+                                  gorjeta: 0,
+                                  funcionario: ' ',
+                                  id: id
+                                    }
+                                    $.ajax({
+                                        method: 'PUT',
+                                        url: '/adicionar/pagamento',
+                                        data: dados,
+                                        success: function(resposta) {
+                                            window.location.reload(true);
+                                        }
+
+                                    });
+                   }
+                }
+
+            });
+            // console.log(cliente);
+
         }
 
         // console.log(dados);
@@ -779,6 +864,21 @@
 
         }
     });
+
+
+    function removePag(id){
+        var resposta= confirm("Deseja apagar este pagamento? Caso SIM clique em OK");
+        if(resposta==true){
+            $.ajax({
+                method:"PUT",
+                url:"/remove/pagamento/"+id,
+                
+            }).done(function(){                
+                    window.location.reload(true);
+                
+            });
+        }
+    }
 </script>
 
 </html>
